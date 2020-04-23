@@ -6,6 +6,7 @@ import aiohttp
 from aiohttp_xmlrpc.client import ServerProxy
 
 import bandersnatch
+from .alternative import alter
 
 from .utils import USER_AGENT
 
@@ -93,6 +94,10 @@ class Master:
         logger.debug(f"Getting {path} (serial {required_serial})")
         if not path.startswith(("https://", "http://")):
             path = self.url + path
+
+        path, revised = alter(path)
+        if revised:
+            logger.debug(f"Fast getting {path} (serial {required_serial})")
 
         timeout = self.timeout
         if "timeout" in kw:

@@ -14,6 +14,7 @@ import bandersnatch.delete
 import bandersnatch.log
 import bandersnatch.mirror
 import bandersnatch.verify
+from bandersnatch.alternative import config_alternative
 
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
@@ -92,6 +93,8 @@ def _verify_parser(subparsers: argparse._SubParsersAction) -> None:
 
 
 async def async_main(args: argparse.Namespace, config: ConfigParser) -> int:
+    config_alternative(config)
+
     if args.op.lower() == "delete":
         return await bandersnatch.delete.delete_packages(config, args)
     elif args.op.lower() == "verify":

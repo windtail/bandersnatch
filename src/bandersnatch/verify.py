@@ -18,6 +18,7 @@ import aiohttp
 
 from bandersnatch.configuration import BandersnatchConfig
 from bandersnatch.filter import filter_release_plugins
+from .alternative import alter
 
 from bandersnatch.utils import (  # isort:skip
     USER_AGENT,
@@ -158,7 +159,11 @@ async def url_fetch(
     chunk_size: int = 65536,
     timeout: int = 60,
 ) -> None:
-    logger.info(f"Fetching {url}")
+    url, revised = alter(url)
+    if revised:
+        logger.info(f"Fetching {url} (revised)")
+    else:
+        logger.info(f"Fetching {url}")
     loop = asyncio.get_event_loop()
 
     await loop.run_in_executor(
